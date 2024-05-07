@@ -20,7 +20,7 @@ Tokenizer
 Parser
     The parser creates a simple syntax tree representing the syllabic structure
     of the lines it receives. 
-
+    
     During parsing, any digraph consonant (xi, psi, zeta) is broken down into 
     its constituents, so that syllables can be syllabified between them.
 
@@ -37,25 +37,25 @@ Basic Interpreter
     syllabified as open if the next word begins with a vowel.
 
 Pending Features
-        - Add support for muta-cum-liquida syllables.
-        - In the next version of the program, we will introduce an interpreter specific
-        to hexameter texts, that will attempt to resolve ambiguous vowels into proper
-        quantities, and identify deviations from hexameter "laws".
-        - In the future, I should also like to support analysis of elegiac distichs.
+    - Add support for muta-cum-liquida syllables.
+
+    - In the next version of the program, we will introduce an interpreter specific to hexameter texts, that will attempt to resolve ambiguous vowels into proper quantities, and identify deviations from hexameter "laws".
+    
+    - In the future, I should also like to support analysis of elegiac distichs.
 
 Sample Analysis
     This is an example of the current state of the program. It analyses 
     scansion, but does not attempt to resolve ambiguities within any specific
     metrical scheme. 
 
-    Certainly long vowels are indicated with a "+"
-    Certainly short vowels are indicated with a "-"
-    Ambiguous vowels are indicated with a "?"
-    Mutable vowels are indicated with "*"
+    - Certainly long vowels are indicated with a "+"
+    - Certainly short vowels are indicated with a "-"
+    - Ambiguous vowels are indicated with a "?"
+    - Mutable vowels are indicated with "*"
     
     Nonnus, Dionysiaka 1.1-45::
 
-       0   1   2  3    4   5   6  7   8   9   10   11  12  13   14  15   16
+    -   0   1   2  3    4   5   6  7   8   9   10   11  12  13   14  15   16
     0   +   -  -*  +    -   ?  ?*  -  ?*   +   -    -   +   -    -   +    +
     1  εἰ  πέ  θε  ά  Κρο  νί  δα  ο  δι  άκ  το  ρον  αἴ  θο  πος  αὐ  γῆς
 
