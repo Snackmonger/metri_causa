@@ -39,7 +39,13 @@ Basic Interpreter
 Pending Features
     - Add support for muta-cum-liquida syllables.
 
+<<<<<<< HEAD
     - In the next version of the program, we will introduce an interpreter specific to hexameter texts, that will attempt to resolve ambiguous vowels into proper quantities, and identify deviations from hexameter "laws".
+=======
+    - In the next version of the program, we will introduce an interpreter specific
+    to hexameter texts, that will attempt to resolve ambiguous vowels into proper
+    quantities, and identify deviations from hexameter "laws".
+>>>>>>> c113fe5aafffad2bb25191d862e5a08b25923d95
     
     - In the future, I should also like to support analysis of elegiac distichs.
 
