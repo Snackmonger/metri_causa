@@ -153,13 +153,15 @@ def get_char_attrs(char: str) -> list[str]:
             if not x == "":
                 elems.append(unicodedata.name(chr(int(x, 16))))
         result = [y.lower() for x in elems for y in x.split()]
-        for item in result:
-            item = conversions.get(item, item)
+        for mistake, correction in conversions.items():
+            if mistake in result:
+                result.append(correction)
         if "comma" in result:
             if "reversed" in result:
                 result.append("dasia")
             else:
                 result.append("psili")
+        return result
 
     return [x.lower() for x in unicodedata.name(char).split(" ")]
 

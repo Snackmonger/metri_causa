@@ -1,7 +1,7 @@
 """Constants used in the program."""
 from enum import StrEnum, auto
 
-ALPHA_VARIANTS = "ἀἁἂἃἄἅἆἇἈἉἊἋἌἍἎἏὰάᾀᾁᾂᾃᾄᾅᾆᾇᾈᾉᾊᾋᾌᾍᾎᾏᾰᾱᾲᾳᾴᾶᾷᾸᾹᾺΆᾼαΑόά"
+ALPHA_VARIANTS = "ἀἁἂἃἄἅἆἇἈἉἊἋἌἍἎἏὰάᾀᾁᾂᾃᾄᾅᾆᾇᾈᾉᾊᾋᾌᾍᾎᾏᾰᾱᾲᾳᾴᾶᾷᾸᾹᾺΆᾼαΑά"
 EPSILON_VARIANTS = "ἐἑἒἓἔἕἘἙἚἛἜἝὲέεΕέ"
 ETA_VARIANTS = "ἠἡἢἣἥἤἦἧἨἩἪἫἬἭἮἯὴήᾐᾑᾒᾓᾔᾕᾖᾗᾘᾙᾚᾛᾜᾝᾞᾟῂῃῄῆῇῈΈῊΉῌηΗή"
 IOTA_VARIANTS = "ἰἱἲἳἴἵἶἷἸἹἺἻἼἽἾἿὶίῐῑῒΐῖῗῘῙῚΊιΙίϊΐ"
