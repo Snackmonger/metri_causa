@@ -26,10 +26,10 @@ Parser
                                 word
                                 |
                                 syllable
-                               /     \
-                            onset   rhyme
-                                    /   \
-                            nucleus     coda
+                                |        \
+                                onset   rhyme
+                                        |    \
+                                    nucleus    coda
 
     During parsing, any digraph consonant (xi, psi, zeta) is broken down into 
     its constituents, so that syllables can be syllabified between them.
