@@ -29,5 +29,24 @@ class LengthTest:
 
             symbols = [y for x in cola for y in simplify_metrical_symbols(x)]
             df = pandas.DataFrame([symbols, words])
+            
+            print(df)
+            print()
+
+
+class LengthTest2:
+    """Class that prints an ugly version of the scansion of a given passage."""
+    def __init__(self, text: str) -> None:
+        tokens = GreekTokenizer().tokenize(text)
+        interpreter = LengthInterpreter()
+        lines = GreekSyllableParser().parse(tokens)
+        for line in lines:
+            cola = line.accept(interpreter)
+            printer = SyllableTreePrinter()
+            words = [word.accept(printer) for word in line.words]
+
+            symbols = [simplify_metrical_symbols(x) for x in cola]
+            df = pandas.DataFrame([symbols, words])
+            # df.style.set_properties(**{"text-align": "left"})
             print(df)
             print()

@@ -1,4 +1,4 @@
-from src.metri_causa import LengthTest
+from src.metri_causa import LengthTest2
 
 
 def test_nonn() -> None:
@@ -8,4 +8,4 @@ def test_nonn() -> None:
 
 
 def test_scansion(text: str) -> None:
-    LengthTest(text)
+    LengthTest2(text)

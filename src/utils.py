@@ -109,8 +109,7 @@ def can_start_digraph(char: str) -> bool:
             vowel.prosgegrammeni,
             vowel.psili,
             vowel.dasia,
-            vowel.iota,
-            vowel.upsilon]):
+            vowel.iota]):
         return False
     return True
 
