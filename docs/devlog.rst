@@ -15,14 +15,15 @@ Tokenizer
     determine whether adjacent vowels should be tokenized as diphthongs. 
     Consonants are sorted into basic articulation types: stop, resonant,
     sibilant, double. Whitespace is converted into word-end and word-beginning
-    tokens. Newlines and line breaks ("-") are used as cues to intended metrical cola.
+    tokens. Newlines and line breaks ("-") are used as cues to interpreting the
+    intended metrical cola.
 
 Parser
     The parser creates a simple syntax tree representing the syllabic structure
     of the lines it receives. 
     
     During parsing, any digraph consonant (xi, psi, zeta) is broken down into 
-    its constituents, so that syllables can be syllabified between them.
+    its constituents, so that a syllable boundary can be placed between them.
 
     A punctuation mark is incorporated as an annotation in the 'word' nodes.
 
