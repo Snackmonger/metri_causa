@@ -27,6 +27,7 @@ class Scansion(StrEnum):
     LONG = auto()
     SHORT = auto()
     AMBIGUOUS = auto()
+    MCL = auto()
     LONG_MUTABLE = auto()
     SHORT_MUTABLE = auto()
     AMBIGUOUS_MUTABLE = auto()

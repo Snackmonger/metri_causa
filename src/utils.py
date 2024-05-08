@@ -7,6 +7,8 @@ from typing import (
     Sequence
 )
 import unicodedata
+
+from loguru import logger
 from src.constants import (
     CONSONANTS,
     STOPS,
@@ -314,4 +316,19 @@ def simplify_metrical_symbols(cola: list[Scansion]) -> list[str]:
             values.append("?")
         if colon == Scansion.AMBIGUOUS_MUTABLE:
             values.append("?*")
+        if colon == Scansion.MCL:
+            values.append("M")
     return values
+
+def is_muta_cum_liquida(syllable1: Syllable, syllable2: Syllable) -> bool:
+    """Indicate whether the ending of syllable1 forms a muta-cum-liquida
+    environment with the beginning of syllable2.
+    """
+    consonants: list[Token] = syllable1.rhyme.coda.cluster + syllable2.onset.cluster
+    if [x.token_type for x in consonants] == [TokenType.STOP, TokenType.RESONANT]:
+        # Any combination of stop + resonant ("liquid") passes the test.
+        # The groups "γν", "γμ", "δν", "δμ" are always long in the best poets,
+        # but later versifiers sometimes take this license, so we let the
+        # interpreter decide whether they're valid clusters for MCL.
+        return True
+    return False

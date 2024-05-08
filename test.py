@@ -1,4 +1,4 @@
-from tests.run import test_nonn
+from tests.run import test_nonnus
 
 
-test_nonn()
+test_nonnus()

@@ -18,6 +18,7 @@ from src.nodes import (
 from src.utils import (
     forms_closed_word,
     forms_mutation_environment,
+    is_muta_cum_liquida,
     is_open,
     has_next,
     has_onset
@@ -74,7 +75,6 @@ class LengthInterpreter:
 
     def visit_Rhyme(self, segment: Rhyme) -> Scansion:
         if segment.coda.cluster:
-            # NOTE: internal muta cum liquida check goes here
             return Scansion.LONG
 
         return segment.nucleus.accept(self)
@@ -89,14 +89,28 @@ class LengthInterpreter:
         involved in a vowle mutation such as synizesis or correption.
         """
         pattern: list[Scansion] = []
-        # Check each syllable's ending for vowel mutation environment.
         for i, syllable in enumerate(segment.syllables):
             length = syllable.accept(self)
+
+            # Open syllables might be modified by a following vowel in 
+            # correption or synizesis. Keep their surface quantity and 
+            # mark them as mutable.
             if is_open(syllable):
                 if has_next(segment.syllables, i):
                     next_syllable = segment.syllables[i + 1]
                     if not has_onset(next_syllable):
                         length = Scansion(length.value + "_mutable")
+
+            # Closed syllables are long, but a stop followed by a resonant
+            # might count as a single consonant and form a compound onset
+            # with the following vowel. We only really care about cases
+            # where a non-long vowel might be lengthened.
+            elif has_next(segment.syllables, i):
+                next_syllable = segment.syllables[i + 1]
+                vowel = syllable.rhyme.nucleus.vowel.lexeme
+                if is_muta_cum_liquida(syllable, next_syllable) and not vowel in LONG_VOWELS:
+                        length = Scansion.MCL
+                        
             pattern.append(length)
         return pattern
 
@@ -117,11 +131,19 @@ class LengthInterpreter:
                 # ὦ Φρύ.γι.ε Ζεῦ -> Ends with open short vowel, but forms
                 # closed word with the next word's onset (Φρύ.γι.εΣ.Δεῦ)
                 if forms_closed_word(word, next_word):
-                    pattern[-1] = Scansion.LONG
-                else:
+                    vowel = word.syllables[-1].rhyme.nucleus.vowel.lexeme
+
+                    if is_muta_cum_liquida(word.syllables[-1], next_word.syllables[0]) and not vowel in LONG_VOWELS:
+                        pattern[-1] = Scansion.MCL
+                    else:
+                        pattern[-1] = Scansion.LONG
+
+                else: # forms open word
                     vowel = word.syllables[-1].rhyme.nucleus
                     pattern[-1] = vowel.accept(self)
+
                 if forms_mutation_environment(word, next_word):
                     pattern[-1] = Scansion(pattern[-1].value + "_mutable")
+                    
             patterns.append(pattern)
         return patterns

@@ -8,6 +8,9 @@ from src.utils import simplify_metrical_symbols
 
 
 class SyllabificationPrinter:
+    """Class that prints a simplified version of the syllable structure
+    of a given text.
+    """
     def __init__(self, text: str):
         tokens = GreekTokenizer().tokenize(text)
         printer = SyllableTreePrinter()
@@ -15,26 +18,7 @@ class SyllabificationPrinter:
         for line in lines:
             print(line.accept(printer))
 
-
 class LengthTest:
-    """Class that prints an ugly version of the scansion of a given passage."""
-    def __init__(self, text: str) -> None:
-        tokens = GreekTokenizer().tokenize(text)
-        interpreter = LengthInterpreter()
-        lines = GreekSyllableParser().parse(tokens)
-        for line in lines:
-            cola = line.accept(interpreter)
-            printer = SyllableTreePrinter()
-            words = [syll.accept(printer) for word in line.words for syll in word.syllables]
-
-            symbols = [y for x in cola for y in simplify_metrical_symbols(x)]
-            df = pandas.DataFrame([symbols, words])
-            
-            print(df)
-            print()
-
-
-class LengthTest2:
     """Class that prints an ugly version of the scansion of a given passage."""
     def __init__(self, text: str) -> None:
         tokens = GreekTokenizer().tokenize(text)
