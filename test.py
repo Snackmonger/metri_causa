@@ -1,4 +1,4 @@
-from tests.run import test_nonnus
+from tests.run_text_analyses import test_nonnus, test_homer
 
 
-test_nonnus()
+test_homer()

@@ -1,10 +1,8 @@
 # pylint:disable=missing-function-docstring,invalid-name,missing-class-docstring
-from loguru import logger
 from src.constants import (
-    AMBIGUOUS_VOWELS,
+    ELISION,
     Scansion,
-    LONG_VOWELS,
-    SHORT_VOWELS
+    LONG_VOWELS
 )
 from src.nodes import (
     Coda,
@@ -16,6 +14,8 @@ from src.nodes import (
     Word
 )
 from src.utils import (
+    VowelGlyph,
+    ends_with_elision,
     forms_closed_word,
     forms_mutation_environment,
     is_muta_cum_liquida,
@@ -57,18 +57,13 @@ class LengthInterpreter:
         return len(segment.cluster)
 
     def visit_Nucleus(self, segment: Nucleus) -> Scansion:
-
         vowel = segment.vowel.lexeme
-        if len(vowel) > 1:
+        if len(vowel) > 1: # diphthong
             return Scansion.LONG
-        if vowel in LONG_VOWELS:
-            return Scansion.LONG
-        if vowel in SHORT_VOWELS:
-            return Scansion.SHORT
-        if vowel in AMBIGUOUS_VOWELS:
-            return Scansion.AMBIGUOUS
-        logger.info(f"Vowel {vowel} was not recognized.")
-        return Scansion.AMBIGUOUS
+        if vowel == ELISION: 
+            return Scansion.ELISION
+        v = VowelGlyph(vowel)
+        return v.length()
 
     def visit_Coda(self, segment: Coda) -> int:
         return len(segment.cluster)
@@ -84,7 +79,7 @@ class LengthInterpreter:
 
     def visit_Word(self, segment: Word) -> list[Scansion]:
         """Interpret a word.
-        
+
         If any vowel is followed immediately by another vowel, it might be 
         involved in a vowle mutation such as synizesis or correption.
         """
@@ -92,8 +87,8 @@ class LengthInterpreter:
         for i, syllable in enumerate(segment.syllables):
             length = syllable.accept(self)
 
-            # Open syllables might be modified by a following vowel in 
-            # correption or synizesis. Keep their surface quantity and 
+            # Open syllables might be modified by a following vowel in
+            # correption or synizesis. Keep their surface quantity and
             # mark them as mutable.
             if is_open(syllable):
                 if has_next(segment.syllables, i):
@@ -109,8 +104,8 @@ class LengthInterpreter:
                 next_syllable = segment.syllables[i + 1]
                 vowel = syllable.rhyme.nucleus.vowel.lexeme
                 if is_muta_cum_liquida(syllable, next_syllable) and not vowel in LONG_VOWELS:
-                        length = Scansion.MCL
-                        
+                    length = Scansion.MCL
+
             pattern.append(length)
         return pattern
 
@@ -124,7 +119,7 @@ class LengthInterpreter:
             if has_next(segment.words, i):
                 next_word = segment.words[i + 1]
                 # Check 'hidden' syllable quantity.
-                # τὸν κε.μὰς -> Ends with closed syll, and forms genuine 
+                # τὸν κε.μὰς -> Ends with closed syll, and forms genuine
                 # closed word (τὸν.κε.μὰς)
                 # Πρῶ.τον ἔ.χει -> Ends with closed syll, but forms
                 # open word with next word's onset (Πρῶ.το.νἔ.χει)
@@ -138,12 +133,13 @@ class LengthInterpreter:
                     else:
                         pattern[-1] = Scansion.LONG
 
-                else: # forms open word
+                else:  # forms open word
                     vowel = word.syllables[-1].rhyme.nucleus
                     pattern[-1] = vowel.accept(self)
 
                 if forms_mutation_environment(word, next_word):
-                    pattern[-1] = Scansion(pattern[-1].value + "_mutable")
-                    
+                    if not ends_with_elision(word):
+                        pattern[-1] = Scansion(pattern[-1].value + "_mutable")
+
             patterns.append(pattern)
         return patterns

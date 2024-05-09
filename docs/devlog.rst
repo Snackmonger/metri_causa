@@ -1,5 +1,77 @@
-Greek Metrical Analysis Tool Version 0.1, May 07 2024
-=====================================================
+Greek Metrical Analysis Tool 
+============================
+
+.. contents:: 
+
+Version 0.1.2, May 9 2024
+------------------------
+Elision
+    Elisions are now handled correctly. Elisions are marked as a 'vowel' so that the
+    parser is able to contextualize them in words, and it is up to the interpreter
+    to treat them as null syllables. We may encounter some problems in deciding 
+    which colon null monosyllables are supposed to go with::
+
+        Φῆ πυρὶ καιόμενος, ἀνὰ | δ’ ἔφλυε καλὰ ῥέεθρα.
+        Φῆ πυρὶ καιόμενος, ἀνὰ δ’ | ἔφλυε καλὰ ῥέεθρα.
+
+    Off the top of my head, elided monosyllables will be ge, te, de, ke, all of which
+    are postpositives or enclitics.
+Next Steps
+    Start working on scanning hexameter. We will read the following paper and try 
+    to implement its automaton:
+
+    Schumann, A-K., et al. (2022). "Using Finite-State Machines to Automatically Scan 
+    Ancient Greek Hexameter", in *Digital Scholarship in the Humanities*, Vol. 37. No. 1.
+
+Sample Analysis
+    Now elisions are marked with "E"::
+
+        -       0            1        2    3     4          5        6           7
+        0  [+, E]    [-, ?, +]  [+*, +]  [-]  [+*]  [+, ?, ?]  [+*, -]   [?, +, +]
+        1   λῆγ.’  ἔ.ρι.δος[,]   Τρῶ.ας   δὲ   καὶ   αὐ.τί.κα    δῖ.ος  Ἀ.χιλ.λεὺς
+
+                0                  1    2     3          4     5            6
+        0  [+, -*, -]   [+, -, ?, +*, -]  [?]  [+*]  [-, ?, +]  [+*]    [?, +, +]
+        1    ἄσ.τε.ος  ἐκ.σε.λά.σει.ε[·]   τί   μοι   ἔ.ρι.δος   καὶ  ἀ.ρω.γῆς[;]
+
+        0       1                2       3    4           5       6            7
+        0  [+]  [?, ?]    [+*, -, -, -]  [?, ?]  [E]  [M, ?*, -]  [?, ?]   [-*, M, ?]
+        1   Φῆ   πυ.ρὶ  και.ό.με.νος[,]    ἀ.νὰ   δ’     ἔφ.λυ.ε   κα.λὰ  ῥέ.εθ.ρα[.]
+
+        0    1       2     3       4                5       6       7
+        0  [+]  [-]  [-, +]  [+*]  [+, -]  [-, +, -, -, +]  [?, ?]  [+, +]
+        1   ὡς   δὲ  λέ.βης  σδεῖ  ἔν.δον  ἐ.πει.γό.με.νος   πυ.ρὶ  πολ.λῷ
+
+                0              1                    2               3
+        0   [?, +]   [+, -, -, -]  [?, ?, M, -, -*, +]  [?*, ?, +*, -]
+        1  κνί.σην  μελ.δό.με.νος    ἁ.πα.λοτ.ρε.φέ.ος      σι.ά.λοι.ο
+
+                0                1       2    3       4          5           6
+        0   [+, -, -]     [+, -, ?, +]  [?, -]  [+]  [?, ?]  [+, ?, ?]      [+, +]
+        1  πάν.το.θεν  ἀμ.βο.λά.δην[,]    ὑ.πὸ   δὲ  κσύ.λα  κάγ.κα.να  κεῖ.ται[,]
+
+        0    1       2           3       4             5        6    7         8
+        0  [+]  [+]  [?, ?]  [-*, M, ?]  [?, M]     [-, -, +]  [-*, -]  [E]    [?, +]
+        1   ὣς  τοῦ   κα.λὰ    ῥέ.εθ.ρα   πυ.ρὶ  φλέ.γε.το[,]    σδέ.ε   δ’  ὕ.δωρ[·]
+
+                0          1              2       3            4       5    6       7
+        0  [+, E]  [-, -, M]     [-, -*, +]  [+, E]    [+, -, -]  [+, -]  [E]  [M, +]
+        1   οὐδ.’    ἔ.θε.λε  προ.ρέ.ειν[,]   ἀλλ.’  ἴσ.χε.το[·]  τεῖ.ρε   δ’   ἀτ.μὴ
+
+                0           1                 2       3    4    5       6
+        0  [+, +, +*, -]  [?*, +, ?]      [-, M, -, -]  [+, ?]  [-]  [E]  [+, +]
+        1   Ἡ.φαίσ.τοι.ο     βί.η.φι  πο.λύφ.ρο.νος[.]  αὐ.τὰρ    ὅ   γ’   Ἥ.ρην
+
+                0              1           2              3              4
+        0  [+, ?]   [+, -, -, -]  [-, -*, +]  [-, -*, +, M]      [-, +, ?]
+        1  πολ.λὰ  λισ.σό.με.νος      ἔ.πε.α   πτε.ρό.εν.τα  προ.σηύ.δα[·]
+
+
+
+
+
+Version 0.1.1, May 07 2024
+-------------------------
 Abstract
     The program is meant to aid in the analysis and composition of Greek poetry.
     On the one hand, it should be able to parse the syllable structure of Greek poetry

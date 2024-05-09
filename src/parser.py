@@ -1,6 +1,8 @@
 
 from typing import Optional
 
+# from loguru import logger
+
 from src.bases import Parser, Token
 from src.nodes import (
     Coda,
@@ -52,6 +54,7 @@ class GreekSyllableParser(Parser):
                 break
             syllable = self.__syllable()
             syllables.append(syllable)
+
         return Word(syllables, punct)
 
     def __syllable(self) -> Syllable:
@@ -71,7 +74,10 @@ class GreekSyllableParser(Parser):
     def __nucleus(self) -> Nucleus:
         if self.match(TokenType.VOWEL):
             return Nucleus(self.previous)
-        raise RuntimeError(f"Unable to parse segment {self.peek}")
+        if self.match(TokenType.ELISION):
+            return Nucleus(self.previous)
+        raise RuntimeError(f"Unknown nucleus: {self.peek}")
+
 
     def __coda(self) -> Coda:
         if self.__has_another_vowel:
@@ -81,14 +87,15 @@ class GreekSyllableParser(Parser):
             # VCCV should be syllabified as VC.CV
             return Coda(self.__cluster(greedy=False))
         # VCC[END] should syllabify all remaining consonants in the word (we
-        # pretend that words syllabify in isolation from other words).
+        # pretend that words syllabify in isolation from other words and let
+        # the interpreter correct them if necessary).
         return Coda(self.__cluster(greedy=True))
 
     def __cluster(self, greedy: bool = False) -> list[Token]:
         """Create a consonantal segment.
 
-        By default, this will consume the next single consonant. The 
-        ``greedy`` flag indicates to consume all possible consonants.
+        By default, this will consume the next SINGLE consonant. The 
+        ``greedy`` flag indicates to consume ALL following consonants.
         """
         if greedy:
             return self.__greedy()

@@ -1,0 +1,119 @@
+[
+    {
+        "name": "glyconic",
+        "symbol": "gl",
+        "pattern": "xx+--+-+",
+        "type": "aeolic",
+        "variations": [
+            {
+                "symbol": "¨gl",
+                "pattern": "+--+-+-+",
+                "notes": ["anaclastic"]
+            },
+            {
+                "symbol": "gl¨",
+                "pattern": "+-+-+--+",
+                "notes": ["anaclastic"]
+            }
+        ],
+        "notes": []
+    },
+    {
+        "name": "pherecratean",
+        "symbol": "ph",
+        "pattern": "xx+--++",
+        "type": "aeolic",
+        "notes": []
+    },
+    {
+        "name": "hipponactean",
+        "symbol": "hi",
+        "pattern": "xx+--+-++",
+        "type": "aeolic",
+        "notes": []
+    },
+    {
+        "name": "telesillean",
+        "symbol": "tl",
+        "pattern": "x+--+-+",
+        "type": "aeolic",
+        "notes": [
+            "same as glyconic, but with only one anceps base"
+        ]
+    },
+    {
+        "name": "reizianum",
+        "symbol": "r",
+        "pattern": "x+--++",
+        "type": "aeolic",
+        "notes": [
+            "same as pherecratean, but with only one anceps base"
+        ]
+    },
+    {
+        "name": "hagesichorean",
+        "symbol": "hag",
+        "pattern": "x+--+-++",
+        "type": "aeolic",
+        "notes": [
+            "same as hipponactean, but with only one anceps base"
+        ]
+    },
+    {
+        "name": "aristophanean",
+        "symbol": "ar",
+        "pattern": "+--+-++",
+        "type": "aeolic",
+        "notes": [
+            "same as hipponactean, but with no ancipita bases"
+        ]
+    },
+    {
+        "name": "dodrans",
+        "symbol": "dod",
+        "pattern": "+--+-+",
+        "type": "aeolic",
+        "notes": [
+            "same as glyconic, but with no ancipita bases"
+        ]
+    },
+    {
+        "name": "adonean",
+        "symbol": "ad",
+        "pattern": "+--++",
+        "type": "aeolic",
+        "notes": [
+            "same as pherecratean, but with no ancipita bases"
+        ]
+    },
+    {
+        "name": "penthemimer",
+        "symbol": "pe",
+        "pattern": "x+-++",
+        "type": "aeolic",
+        "notes": []
+    },
+    {
+        "name": "trochaic dimeter",
+        "symbol": "2tr",
+        "pattern": "+-+x+-++",
+        "type": "aeolic",
+        "notes": []
+    },
+    {
+        "name": "lekythion",
+        "symbol": "lk",
+        "pattern": "+-+x+-+",
+        "type": "aeolic",
+        "notes": [
+            "same as trochaic dimeter catalectic"
+        ]
+    },
+    {
+        "name": "ithyphallic",
+        "symbol": "ith",
+        "pattern": "+-+-++",
+        "type": "aeolic",
+        "notes": []
+    },
+]

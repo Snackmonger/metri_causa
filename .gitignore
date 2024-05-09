@@ -9,3 +9,11 @@ src/__pycache__/interpreter.cpython-311.pyc
 src/__pycache__/metri_causa.cpython-311.pyc
 src/__pycache__/utils.cpython-311.pyc
 tests/__pycache__/run.cpython-311.pyc
+src/__pycache__/__init__.cpython-311.pyc
+src/__pycache__/bases.cpython-311.pyc
+src/__pycache__/nodes.cpython-311.pyc
+src/__pycache__/parser.cpython-311.pyc
+src/__pycache__/printer.cpython-311.pyc
+src/__pycache__/token_types.cpython-311.pyc
+src/__pycache__/tokenizer.cpython-311.pyc
+tests/__pycache__/run_text_analyses.cpython-311.pyc

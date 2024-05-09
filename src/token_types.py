@@ -9,6 +9,7 @@ class TokenType(StrEnum):
     RESONANT = auto()
     SIBILANT = auto()
     VOWEL = auto()
+    ELISION = auto()
     EOF = auto()
     UNKNOWN_LEXEME = auto()
     NEWLINE = auto()

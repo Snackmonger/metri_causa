@@ -11,6 +11,9 @@ import unicodedata
 from loguru import logger
 from src.constants import (
     CONSONANTS,
+    ELISION,
+    LONG_VOWELS,
+    SHORT_VOWELS,
     STOPS,
     DOUBLE_CONSONANTS,
     PUNCTUATION,
@@ -250,6 +253,7 @@ class VowelGlyph():
         self.omicron: bool = False
         self.tonos: bool = False
         self.dialytika: bool = False
+        self.char: str = char
         self.__populate(char)
 
     def __populate(self, char: str) -> None:
@@ -260,9 +264,24 @@ class VowelGlyph():
     def __repr__(self) -> str:
         string = "<:"
         for k, v in vars(self).items():
+            if k == "char":
+                pass
             if v:
                 string += k + ", "
         return string[:-2] + ":>"
+    
+    def length(self) -> Scansion:
+        """Return the natural length of the vowel."""
+        if self.perispomeni:
+            return Scansion.LONG
+        if self.alpha or self.iota or self.upsilon:
+            return Scansion.AMBIGUOUS
+        if self.eta or self.omega:
+            return Scansion.LONG
+        if self.epsilon or self.omicron:
+            return Scansion.SHORT
+        raise ValueError(f"Unknown vowel: {self.char}")
+    
 
 def is_open(syllable: Syllable) -> bool:
     """Indicate whether the syllable has a coda."""
@@ -318,6 +337,8 @@ def simplify_metrical_symbols(cola: list[Scansion]) -> list[str]:
             values.append("?*")
         if colon == Scansion.MCL:
             values.append("M")
+        if colon == Scansion.ELISION:
+            values.append("E")
     return values
 
 def is_muta_cum_liquida(syllable1: Syllable, syllable2: Syllable) -> bool:
@@ -332,3 +353,7 @@ def is_muta_cum_liquida(syllable1: Syllable, syllable2: Syllable) -> bool:
         # interpreter decide whether they're valid clusters for MCL.
         return True
     return False
+
+def ends_with_elision(word: Word) -> bool:
+    """Indicate whether the given word ends with an elided vowel."""
+    return word.syllables[-1].rhyme.nucleus.vowel.token_type == TokenType.ELISION
