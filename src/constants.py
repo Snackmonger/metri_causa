@@ -33,6 +33,46 @@ class Scansion(StrEnum):
     SHORT_MUTABLE = auto()
     AMBIGUOUS_MUTABLE = auto()
 
+class HexameterStates(StrEnum):
+    """Representation of the finite states in which the hexameter can exist."""
+    # 0
+    DDDDD =  auto()
+    # 1
+    SDDDD =  auto()
+    DSDDD =  auto()
+    DDSDD =  auto()
+    DDDSD =  auto()
+    DDDDS =  auto()
+    # 2
+    SSDDD =  auto()
+    DSSDD =  auto()
+    DDSSD =  auto()
+    DDDSS =  auto()
+    SDSDD =  auto()
+    SDDSD =  auto()
+    SDDDS =  auto()
+    DSDSD =  auto()
+    DDSDS =  auto()
+    DSDDS =  auto()
+    # 3
+    DDSSS =  auto()
+    SDDSS =  auto()
+    SSDDS =  auto()
+    SSSDD =  auto()
+    DSDSS =  auto()
+    DSSDS =  auto()
+    SDSDS =  auto()
+    SSDSD =  auto()
+    SDSSD =  auto()
+    # 4
+    DSSSS =  auto()
+    SDSSS =  auto()
+    SSDSS =  auto()
+    SSSDS =  auto()
+    SSSSD =  auto()
+    # 5
+    SSSSS =  auto()
+
 
 # Metrical Symbols in Unicode
 # × (multiplication sign) anceps 00D7
