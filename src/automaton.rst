@@ -1,6 +1,8 @@
 Hexameter Automaton Notes
 =========================
 
+.. contents::
+
 Although I'm well familiar with the hexameter and matters of ancient Greek philology,
 I'm a relative newcomer to the world of computer programming. This page is a collection
 of notes I used when thinking about how to write the part of the program that will analyze
@@ -20,6 +22,7 @@ WEST-2
 
 Considerations
 ++++++++++++++
+
 
 FINITE STATE PRINCIPLE
 ----------------------
@@ -42,8 +45,9 @@ be resolvable to 32 end-states, organized below by number of spondees
                     DDSDSX  SSDSDX
                     DSDDSX  SDSSDX
 
-ARBITRARY LENGTHENING PRINCIPLE
--------------------------------
+
+ARBITRARY LENGTHENING
+---------------------
 
 Words that do not adhere the necessary pattern are sometimes given 
 vowel quantities that cannot be justified etymologically. When vowels
@@ -70,8 +74,122 @@ before a caesura::
         ἐπίτονος            ɛ̄̓πίτονος (Od. 12. 243) (NB not ει)
         συβόσια             συβόσῑα (Od. 14. 101)
 
-IRREGULAR STRUCTURE PRINCIPLE
------------------------------
+
+MISSING CONSONANT
+-----------------
+In some cases, vowels were lengthened by a consonant that is now lost.
+
+Lost digamma::
+
+    Il. 13.573      ὣς ὃ τυπεὶς ἤσπαιρε μίνυνθά περ, οὔ τι μάλα δήν
+                    +  - -+     ++-     -+-     -    +  -  --   +
+                    ὣς ὃ τυπεὶς ἤσπαιρε μίνυνθά περ, οὔ τι μάλα δϝήν
+                    +  - -+     ++-     -+-     -    +  -  -+   +
+
+Lost sigma::
+
+    Il. 12. 278     τῶν δ᾽ ὥς τε νιφάδες χιόνος πίπτωσι θαμειαί
+                    +      +  -  --+     --+    ++-     --+
+                    τῶν δ᾽ ὥς τε σνιφάδες χιόνος πίπτωσι θαμειαί
+                    +      +  +  --+      --+    ++-     --+
+
+    Il. 16. 143     Πηλιάδα μελίην, τὴν πατρὶ φίλωι πόρε Χείρων
+                    +---    --+     +   +-    -+    --   ++
+                    Πηλιάδα σμελίην, τὴν πατρὶ φίλωι πόρε Χείρων
+                    +--+    --+      +   +-    -+    --   ++
+
+Lost sigma and digamma together::
+
+    Il. 3. 172      αἰδοῖός τέ μοί ἐσσι, φίλε ἑκυρέ, δεινός τε
+                    +++     -  -   +-    --   ---    ++     -
+                    αἰδοῖός τέ μοί ἐσσι, φίλε σϝεκυρέ, δϝεινός τε.
+                    +++     -  -   +-    -+   --+      ++      -
+
+    Il. 5. 343      ἣ δὲ μέγα ἰάχουσα ἀπὸ ἕο κάββαλεν υἱόν
+                    + -  -  - --+-    --  -- +--      +-
+                    ἃ δὲ μέγα ϝιϝάχονσα ἀπὸ σϝέο κάββαλεν υἱόν.
+                    + -  -  - --+-      -+  --   +--      +-
+                    (the alpha of μέγα is arbitrarily long in any case)
+
+However, this principle is also applied analogically in places where it is
+not eymologically appropriate::
+    
+    Od. 1. 269      οἷσιν ἐνὶ μεγάροισι· σὲ δὲ φράζεσθαι ἄνωγα
+                    +-    --  --+-       -  +  ++-       -+-
+                    (as if σμεγάροισι)
+
+    Il. 17. 595     ἀστράψας δὲ μάλα μεγάλ᾽ ἔκτυπε, τὴν δὲ τίναξε
+                    +++      -  --   --     +--     +   -  -+-
+                    (as if σμεγάλ᾽)
+
+Thus, the general rule is that a short vowel may arbitrarily be treated as
+long when followed by a resonant, and sometimes delta.
+
+
+ADAPTED FORMULA
+---------------
+Some of these metrical abberations may be the result of fomulaic transposition, in 
+which a formula expecting a vowel/consonant is used in a new context with the wrong
+sequel, or in which a formula is displaced into a new sedes::
+
+    Od. 10.87       ἔνθ’ ἐπεὶ ἐς λιμένα κλυτόν 
+                    +    --   +  --+    --
+    Od. 10.141      ναύλοχον ἐς λιμένα, καί τις θεὸς ἡγεμόνευεν
+                    +--      +  ---     +   +   --   +--+-
+    Il. 24.104      ἤλυθες Οὔλυμπόνδε θεὰ Θέτι κηδομένη περ
+                    +--    +++-       -+  --   +--+     -
+    Il. 18. 385     τίπτε, Θέτι τανύπεπλε, ἱκάνεις ἡμέτερον δῶ; 
+                    +-    --    --+-       -++     +--+     +
+    (Though explained by later sources as contracted from Θέτιϊ)
+    
+The vocative is especially prone to this phenomenon::
+
+    Od. x27         Τηλέμαχ’ + vowel
+    Od. x3          Τηλέμαχε + double consonant
+    Od. 3.230       Τηλέμαχε, ποῖόν σε ἔπος φύγεν ἕρκος ὀδόντων
+                    +---      ++    -  -+   --    +-    -++
+
+    Il. 21.308      φίλε κασίγνητε, σθένος ἀνέρος ἀμφότεροί περ
+                    +-   -+++       --     +--    +--+      -
+    Il. 4. 155      φίλε κασίγνητε, θάνατόν νύ τοι ὅρκι᾽ ἔταμνον
+                    +-   -++-       --+     -   -  +-    -+-
+    Il. 5. 359      φίλε κασίγνητε, κόμισαί τέ με δός τέ μοι ἵππους 
+                    +-   -++-       --+     -  -  +   -  -   ++
+
+And this occurs not only when a single form is transposed, but also when a formula 
+is adapted to accommodate the vocative::
+
+    Il. 2.6         πέμψαι ἐπ’ Ἀτρεΐδῃ Ἀγαμέμνονι οὖλον ὄνειρον· 
+                                                  +-    -+-
+    Il. 2.8         βάσκ᾽ ἴθι, οὖλε ῎Ονειρε, θοὰς ἐπὶ νῆας ᾽Αχαιῶν
+                               +-    -+-                   
+
+    Il. 4.327       εὗρ’ υἱὸν Πετεῶο Μενεσθῆα πλήξιππον 
+                    +    ++   --+-
+    Il. 4. 338      ὦ υἱὲ Πετεῶιο διοτρεφέος βασιλῆος 
+                    + +-  --+-
+
+    Il. 1. 551      Τὸν δ’ ἠμείβετ’ ἔπειτα βοῶπις πότνια Ἥρη·
+                                           -++    +--    ++
+    Il. 8. 471      ὄψεαι, αἴ κ᾽ ἐθέληισθα, βοῶπι πότνια ῞Ηρη
+                                            -+-   +--     ++
+
+    Il. 16. 149     Ξάνθον καὶ Βαλίαν, τὼ ἅμα πνοιῇσι πετέσθην,
+                    ++     +   --+
+    Il. 19. 400     Ξάνθέ τε καὶ Βαλίε, τηλεκλυτὰ τέκνα Ποδάργας
+                    +-    -  +   --+
+
+    νηπύτιε, τί νυ τόξον ἔχεις ἀνεμώλιον αὔτως; (21. 474, cf. 410, 441).
+
+And in some cases, this applies to cases aside from the vocative::
+                                                
+    Il. 18.288      πρὶν μὲν γὰρ Πριάμοιο πόλιν μέροπες ἄνθρωποι
+                    +    +   +   --+-     -+    ---     +++
+                                                μερόπων ἀνθρώπων (7x)
+                                                --+    +++
+
+IRREGULAR STRUCTURE
+-------------------
 Some hexameters exhibit an irregular structure that cannot be resolved or
 explained in a satisfactory way. Perhaps some of these reflect remnants of 
 an early form of the hexameter in which syllable structures were looser,
@@ -153,122 +271,16 @@ Anomalous first foot::
 Some lines have defective endings, perhaps reflecting alternate syllabifications
 of a proto-form::
 
-    Il. 12.208      Τρῶες δ’ ἐρρίγησαν ὅπως ἴδον αἰόλον ὄφιν
+    Il. 12.208      Τρῶες δ’ ἐρρίγησαν ὅπως ἴδον αἰόλον ὄφιν (for ὄπφιν?)
                     ++       +++-      -+   --   +--    --
 
-MISSING CONSONANT PRINCIPLE
----------------------------
-In some cases, vowels were lengthened by a consonant that is now lost, 
-as in the case of words originally containing digamma, and words beginning with a
-sibilant + resonant
 
-Lost digamma::
 
-    Il. 13.573      ὣς ὃ τυπεὶς ἤσπαιρε μίνυνθά περ, οὔ τι μάλα δήν
-                    +  - -+     ++-     -+-     -    +  -  --   +
-                    ὣς ὃ τυπεὶς ἤσπαιρε μίνυνθά περ, οὔ τι μάλα δϝήν
-                    +  - -+     ++-     -+-     -    +  -  -+   +
+MISSING VOWEL
+-------------
+Changes to the language have altered the syllabic structure of certain lines
+inherited from the oral tradition.
 
-Lost sigma::
-
-    Il. 12. 278     τῶν δ᾽ ὥς τε νιφάδες χιόνος πίπτωσι θαμειαί
-                    +      +  -  --+     --+    ++-     --+
-                    τῶν δ᾽ ὥς τε σνιφάδες χιόνος πίπτωσι θαμειαί
-                    +      +  +  --+      --+    ++-     --+
-
-    Il. 16. 143     Πηλιάδα μελίην, τὴν πατρὶ φίλωι πόρε Χείρων
-                    +---    --+     +   +-    -+    --   ++
-                    Πηλιάδα σμελίην, τὴν πατρὶ φίλωι πόρε Χείρων
-                    +---    --+      +   +-    -+    --   ++
-
-Lost sigma and digamma together::
-
-    Il. 3. 172      αἰδοῖός τέ μοί ἐσσι, φίλε ἑκυρέ, δεινός τε
-                    +++     -  -   +-    --   ---    ++     -
-                    αἰδοῖός τέ μοί ἐσσι, φίλε σϝεκυρέ, δϝεινός τε.
-                    +++     -  -   +-    -+   --+      ++      -
-
-    Il. 5. 343      ἣ δὲ μέγα ἰάχουσα ἀπὸ ἕο κάββαλεν υἱόν
-                    + -  -  - --+-    --  -- +--      +-
-                    ἃ δὲ μέγα ϝιϝάχονσα ἀπὸ σϝέο κάββαλεν υἱόν.
-                    + -  -  - --+-      -+  --   +--      +-
-                    (the alpha of μέγα is arbitrarily long in any case)
-
-However, this principle is also applied analogically in places where it is
-not eymologically appropriate::
-    
-    Od. 1. 269      οἷσιν ἐνὶ μεγάροισι· σὲ δὲ φράζεσθαι ἄνωγα
-                    +-    --  --+-       -  +  ++-       -+-
-                    (as if σμεγάροισι)
-
-    Il. 17. 595     ἀστράψας δὲ μάλα μεγάλ᾽ ἔκτυπε, τὴν δὲ τίναξε
-                    +++      -  --   --     +--     +   -  -+-
-                    (as if σμεγάλ᾽)
-
-ADAPTED FORMULA PRINCIPLE
--------------------------
-Some of these metrical abberations may be the result of fomulaic transposition, in 
-which a formula expecting a vowel/consonant is used in a new context with the wrong
-sequel, or in which a formula is displaced into an unexpected sedes::
-
-    Od. 10.87       ἔνθ’ ἐπεὶ ἐς λιμένα κλυτόν 
-                    +    --   +  --+    --
-    Od. 10.141      ναύλοχον ἐς λιμένα, καί τις θεὸς ἡγεμόνευεν
-                    +--      +  ---     +   +   --   +--+-
-
-    Il. 24.104      ἤλυθες Οὔλυμπόνδε θεὰ Θέτι κηδομένη περ
-    Il. 18. 385     τίπτε, Θέτι τανύπεπλε, ἱκάνεις ἡμέτερον δῶ; 
-
-    (Though explained by later sources as contracted from Θέτιϊ)
-    
-The vocative is especially prone to this phenomenon::
-
-    Od. x27         Τηλέμαχ’ + vowel
-    Od. x3          Τηλέμαχε + double consonant
-    Od. 3.230       Τηλέμαχε, ποῖόν σε ἔπος φύγεν ἕρκος ὀδόντων
-                    +---      ++    -  -+   --    +-    -++
-
-    Il. 21.308      φίλε κασίγνητε, σθένος ἀνέρος ἀμφότεροί περ
-                    +-   -+++       --     +--    +--+      -
-    Il. 4. 155      φίλε κασίγνητε, θάνατόν νύ τοι ὅρκι᾽ ἔταμνον
-                    +-   -++-       --+     -   -  +-    -+-
-    Il. 5. 359      φίλε κασίγνητε, κόμισαί τέ με δός τέ μοι ἵππους 
-                    +-   -++-       --+     -  -  +   -  -   ++
-
-And this occurs not only when a single form is transposed, but also when a formula 
-is adapted to accommodate the vocative::
-
-    Il. 2.6         πέμψαι ἐπ’ Ἀτρεΐδῃ Ἀγαμέμνονι οὖλον ὄνειρον· 
-                                                  +-    -+-
-    Il. 2.8         βάσκ᾽ ἴθι, οὖλε ῎Ονειρε, θοὰς ἐπὶ νῆας ᾽Αχαιῶν
-                               +-    -+-                   
-
-    Il. 4.327       εὗρ’ υἱὸν Πετεῶο Μενεσθῆα πλήξιππον 
-                    +    ++   --+-
-    Il. 4. 338      ὦ υἱὲ Πετεῶιο διοτρεφέος βασιλῆος 
-                    + +-  --+-
-
-    Il. 1. 551      Τὸν δ’ ἠμείβετ’ ἔπειτα βοῶπις πότνια Ἥρη·
-                                           -++    +--    ++
-    Il. 8. 471      ὄψεαι, αἴ κ᾽ ἐθέληισθα, βοῶπι πότνια ῞Ηρη
-                                            -+-   +--     ++
-
-    Il. 16. 149     Ξάνθον καὶ Βαλίαν, τὼ ἅμα πνοιῇσι πετέσθην,
-                    ++     +   --+
-    Il. 19. 400     Ξάνθέ τε καὶ Βαλίε, τηλεκλυτὰ τέκνα Ποδάργας
-                    +-    -  +   --+
-
-    νηπύτιε, τί νυ τόξον ἔχεις ἀνεμώλιον αὔτως; (21. 474, cf. 410, 441).
-
-And in some cases, this applies to cases aside from the vocative::
-                                                
-    Il. 18.288      πρὶν μὲν γὰρ Πριάμοιο πόλιν μέροπες ἄνθρωποι
-                    +    +   +   --+-     -+    ---     +++
-                                                μερόπων ἀνθρώπων (7x)
-                                                --+    +++
-
-MISSING VOWEL PRINCIPLE
------------------------
 In the Indo-European language, resonant segments were treated as vowels when
 they were surrounded by less sonorant segments. A similar treatment of rho in
 Greek has been offered as a solution to certain unmetrical hexameters. That is,
@@ -276,33 +288,34 @@ in a previous phase of the language, the rho in these lines functioned as a vowe
 but was re-syllabified in the later language as groups of consonant + vowel, 
 creating lines that no longer scan properly::
 
-    Μηριόνης (τ’) ἀτάλαντος Ἐνῡαλίῳ ἀνδρειφόντῃ (Il. 2.651; 7.166; 8.264; 17.259)
-    +--+          --+-      -+--+   ++++
-    ὃν πότμον γοόωσα, λιποῦσ᾽ ἀνδροτῆτα καὶ ἥβην (Il. 16. 857).
-    Πατρόκλου ποθέων ἀνδροτῆτά τε καὶ μένος ἠΰ (Il. 24. 6).
-    αὖθι μένειν, μή πως ἀβροτάξομεν ἀλλήλοιϊν (Il. 10. 65),
-    νὺξ ἀβρότη, ἢν καὶ τῆι ἀπόσχωνται πολέμοιο (Il. 14. 78),
+    Il. 2.651 (&c.) Μηριόνης (τ’) ἀτάλαντος Ἐνῡαλίῳ ἀνδρειφόντῃ 
+                    +--+          --+-      -+--+   ++++
+    Il. 16.857      ὃν πότμον γοόωσα, λιποῦσ᾽ ἀνδροτῆτα καὶ ἥβην
+                    +  ++     --+-    -+      +-+-      -   ++
+    Il. 24.6        Πατρόκλου ποθέων ἀνδροτῆτά τε καὶ μένος ἠΰ 
+                    +++       --+    +-+-      -  +   --    +-
+    Il. 10.65       αὖθι μένειν, μή πως ἀβροτάξομεν ἀλλήλοιϊν
+                    +-   -+      +  +   +-+--       +++-
+    Il. 14.78       νὺξ ἀβρότη, ἢν καὶ τῆι ἀπόσχωνται πολέμοιο
+                    +   +-+     +  +   +   --++       --+-
 
 In its proto-form, the rho serves as a short vowel and scans properly::
 
     Μηριόνης (τ’) ἀτάλαντος Ἐνῡαλίῳ ἀνρφόντῃ
     +--+          --+-      -+--+   --++
+    ὃν πότμον γοόωσα, λιποῦσ᾽ ἀνρτῆτα καὶ ἥβην
+    +  ++     --+-    -+      --+-    -   ++
+    Πατρόκλου ποθέων ἀνρτῆτά τε καὶ μένος ἠΰ 
+    +++       --+    --+-    -  +   --    +-
+    αὖθι μένειν, μή πως ἀβρτάξομεν ἀλλήλοιϊν
+    +-   -+      +  +   --+--      +++-
+    νὺξ ἀβρτη, ἢν καὶ τῆι ἀπόσχωνται πολέμοιο
+    +   --+    +  +   +   --++       --+-
 
-TRANSFERRED QUANTITY PRINCIPLE
-------------------------------
-One of the phonological changes that the Greek language underwent over time 
-involved the transfer of quantities in adjacent vowels, causing previously
-metrical verses to become unmetrical::
+Another case in which missing vowels affect the scansion of a line pertain 
+to words in which a sequence of vowels have been contracted in the later
+language, causing previously metrical verses to become unmetrical::
 
-    ἕως ὃ ταῦθ᾽ ὥρμαινε κατὰ φρένα καὶ κατὰ θυμόν (Il. 1. 193 et al.)
-    βὰν δ᾽ ἰέναι προτέρω διὰ δώματος, ἕως ἵκοντο (Od. 15. 109)
-
-    In which ἕως has undergone a tranfer of quantity from earlier ἧος.
-
-    
-
-8. Similarly, inflections with contracted syllables might be scanned as if 
-uncontracted.
     ᾽Ιλίου προπάροιθεν          (Il. 15. 66, 22. 6)
     +-+    --+-
     for the uncontracted
@@ -315,8 +328,21 @@ uncontracted.
     βῆν εἰς Αἰόλοο κλυτὰ δώματα 
     +   +   +--+   --    +--
 
-9. Some abberations may represent textual corruptions that entered the tradition
-early enough to have become the new standard. 
+
+TRANSFERRED QUANTITY
+--------------------
+One of the phonological changes that the Greek language underwent over time 
+involved the transfer of quantities in adjacent vowels, causing previously
+metrical verses to become unmetrical::
+
+    ἕως ὃ ταῦθ᾽ ὥρμαινε κατὰ φρένα καὶ κατὰ θυμόν (Il. 1. 193 et al.)
+    βὰν δ᾽ ἰέναι προτέρω διὰ δώματος, ἕως ἵκοντο (Od. 15. 109)
+
+    In which ἕως has undergone a tranfer of quantity from earlier ἧος.
+
+    
+
+
 
     
 
