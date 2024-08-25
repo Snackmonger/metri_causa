@@ -1,5 +1,6 @@
 # pylint:disable=too-many-instance-attributes,too-few-public-methods
 """Miscellaneous utilities used in the program."""
+from dataclasses import dataclass
 from typing import (
     Any,
     Callable,
@@ -21,6 +22,7 @@ from src.constants import (
     RHO_VARIANTS,
     SIGMA_VARIANTS,
     VOWELS,
+    HexameterStates,
     Scansion
 )
 from src.bases import Token
@@ -99,14 +101,63 @@ def is_valid_char(char: str) -> bool:
     return is_consonant(char) or is_vowel(char) or is_punctuation(char)
 
 
-@strcheck
-def can_start_digraph(char: str) -> bool:
-    """Check whether the given vowel char is appropriate for beginning a 
-    digraph vowel sequence.
-    """
-    if not is_vowel(char):
-        return False
-    vowel = VowelGlyph(char)
+class VowelGlyph():
+    """Representation a polytonic Greek vowel glyph, 
+    possibly with diacritical marks."""
+
+    def __init__(self, char: str) -> None:
+        self.alpha: bool = False
+        self.epsilon: bool = False
+        self.eta: bool = False
+        self.iota: bool = False
+        self.omicron: bool = False
+        self.omega: bool = False
+        self.upsilon: bool = False
+        self.small: bool = False
+        self.psili: bool = False
+        self.dasia: bool = False
+        self.varia: bool = False
+        self.oxia: bool = False
+        self.perispomeni: bool = False
+        self.capital: bool = False
+        self.ypogegrammeni: bool = False
+        self.prosgegrammeni: bool = False
+        self.vrachy: bool = False
+        self.macron: bool = False
+        self.omicron: bool = False
+        self.tonos: bool = False
+        self.dialytika: bool = False
+        self.char: str = char
+        self.__populate(char)
+
+    def __populate(self, char: str) -> None:
+        for attr in get_char_attrs(char):
+            if hasattr(self, attr):
+                setattr(self, attr, True)
+
+    def __repr__(self) -> str:
+        string = "<:"
+        for k, v in vars(self).items():
+            if k == "char":
+                pass
+            if v:
+                string += k + ", "
+        return string[:-2] + ":>"
+
+    def length(self) -> Scansion:
+        """Return the natural length of the vowel."""
+        if self.perispomeni:
+            return Scansion.LONG
+        if self.alpha or self.iota or self.upsilon:
+            return Scansion.AMBIGUOUS
+        if self.eta or self.omega:
+            return Scansion.LONG
+        if self.epsilon or self.omicron:
+            return Scansion.SHORT
+        raise ValueError(f"Unknown vowel: {self.char}")
+
+
+def __can_start_dipthong(vowel: VowelGlyph) -> bool:
     if any([vowel.oxia,
             vowel.varia,
             vowel.perispomeni,
@@ -114,19 +165,13 @@ def can_start_digraph(char: str) -> bool:
             vowel.prosgegrammeni,
             vowel.psili,
             vowel.dasia,
-            vowel.iota]):
+            vowel.iota,
+            vowel.omega]):
         return False
     return True
 
 
-@strcheck
-def can_finish_digraph(char: str) -> bool:
-    """Check whether the given vowel char is appropriate for ending a
-    digraph vowel sequence.
-    """
-    if not is_vowel(char):
-        return False
-    vowel = VowelGlyph(char)
+def __can_finish_diphthong(vowel: VowelGlyph) -> bool:
     if any([vowel.alpha,
             vowel.omicron,
             vowel.omega,
@@ -135,6 +180,24 @@ def can_finish_digraph(char: str) -> bool:
             vowel.dialytika]):
         return False
     return True
+
+
+def can_form_diphthong(first: str, second: str) -> bool:
+    """Check whether two characters are appropriate for making a dipthong."""
+    if not is_vowel(first):
+        return False
+    if not is_vowel(second):
+        return False
+    first_ = VowelGlyph(first)
+    second_ = VowelGlyph(second)
+    # Some vowels can form diphthongs with one high vowel but not
+    # the other: ηυ pass, ηι fail, υι pass, υυ fail
+    if first_.eta and second_.iota:
+        return False
+    if first_.upsilon and second_.upsilon:
+        return False
+    answer = __can_start_dipthong(first_) and __can_finish_diphthong(second_)
+    return answer
 
 
 def get_char_attrs(char: str) -> list[str]:
@@ -204,6 +267,7 @@ def break_double(char: str) -> list[Token]:
                 Token(TokenType.SIBILANT, casematch(char, "Σ"))]
     raise ValueError("Invalid character.")
 
+
 def join_double(chars: str) -> str:
     """Join two literal characters into their appropriate double character."""
     chars_ = chars.upper()
@@ -227,65 +291,10 @@ def casematch(prototype: str, char: str) -> str:
     raise ValueError("Invalid character")
 
 
-class VowelGlyph():
-    """Representation a polytonic Greek vowel glyph, 
-    possibly with diacritical marks."""
-
-    def __init__(self, char: str) -> None:
-        self.alpha: bool = False
-        self.epsilon: bool = False
-        self.eta: bool = False
-        self.iota: bool = False
-        self.omicron: bool = False
-        self.omega: bool = False
-        self.upsilon: bool = False
-        self.small: bool = False
-        self.psili: bool = False
-        self.dasia: bool = False
-        self.varia: bool = False
-        self.oxia: bool = False
-        self.perispomeni: bool = False
-        self.capital: bool = False
-        self.ypogegrammeni: bool = False
-        self.prosgegrammeni: bool = False
-        self.vrachy: bool = False
-        self.macron: bool = False
-        self.omicron: bool = False
-        self.tonos: bool = False
-        self.dialytika: bool = False
-        self.char: str = char
-        self.__populate(char)
-
-    def __populate(self, char: str) -> None:
-        for attr in get_char_attrs(char):
-            if hasattr(self, attr):
-                setattr(self, attr, True)
-
-    def __repr__(self) -> str:
-        string = "<:"
-        for k, v in vars(self).items():
-            if k == "char":
-                pass
-            if v:
-                string += k + ", "
-        return string[:-2] + ":>"
-    
-    def length(self) -> Scansion:
-        """Return the natural length of the vowel."""
-        if self.perispomeni:
-            return Scansion.LONG
-        if self.alpha or self.iota or self.upsilon:
-            return Scansion.AMBIGUOUS
-        if self.eta or self.omega:
-            return Scansion.LONG
-        if self.epsilon or self.omicron:
-            return Scansion.SHORT
-        raise ValueError(f"Unknown vowel: {self.char}")
-    
-
 def is_open(syllable: Syllable) -> bool:
     """Indicate whether the syllable has a coda."""
     return not bool(syllable.rhyme.coda.cluster)
+
 
 def has_next(array: Sequence[Any], index: int) -> bool:
     """Indicate whether a word has at least 1 more syllable, considered
@@ -293,9 +302,11 @@ def has_next(array: Sequence[Any], index: int) -> bool:
     """
     return index < len(array) - 1
 
+
 def has_onset(syllable: Syllable) -> bool:
     """Indicate whether the syllable has an onset."""
     return bool(syllable.onset.cluster)
+
 
 def forms_closed_word(word1: Word, word2: Word) -> bool:
     """Indicate whether the ending of word1 should be considered closed,
@@ -309,7 +320,8 @@ def forms_closed_word(word1: Word, word2: Word) -> bool:
     if (x := right.onset):
         consonants.extend(x.cluster)
     return len(consonants) > 1
-        
+
+
 def forms_mutation_environment(word1: Word, word2: Word) -> bool:
     """Indicate whether the ending of word1 should be considered a mutable
     vowel, considering the beginning of word2."""
@@ -317,43 +329,117 @@ def forms_mutation_environment(word1: Word, word2: Word) -> bool:
     right = word2.syllables[0]
     return is_open(left) and not has_onset(right)
 
+
 def simplify_metrical_symbols(cola: list[Scansion]) -> list[str]:
     """Take a list of enum values and return simple symbol representations of 
     them.
     """
-    values: list[str] = []
-    for colon in cola:
-        if colon == Scansion.LONG:
-            values.append("+")
-        if colon == Scansion.LONG_MUTABLE:
-            values.append("+*")
-        if colon == Scansion.SHORT:
-            values.append("-")
-        if colon == Scansion.SHORT_MUTABLE:
-            values.append("-*")
-        if colon == Scansion.AMBIGUOUS:
-            values.append("?")
-        if colon == Scansion.AMBIGUOUS_MUTABLE:
-            values.append("?*")
-        if colon == Scansion.MCL:
-            values.append("M")
-        if colon == Scansion.ELISION:
-            values.append("E")
-    return values
+    conversion = {Scansion.LONG: "+",
+                  Scansion.LONG_MUTABLE: "+*",
+                  Scansion.SHORT: "-",
+                  Scansion.SHORT_MUTABLE: "-*",
+                  Scansion.AMBIGUOUS: "?",
+                  Scansion.AMBIGUOUS_MUTABLE: "?*",
+                  Scansion.MCL: "M",
+                  Scansion.ELISION: "E"}
+    return [conversion[colon] for colon in cola]
+
 
 def is_muta_cum_liquida(syllable1: Syllable, syllable2: Syllable) -> bool:
     """Indicate whether the ending of syllable1 forms a muta-cum-liquida
     environment with the beginning of syllable2.
     """
-    consonants: list[Token] = syllable1.rhyme.coda.cluster + syllable2.onset.cluster
+    c1 = syllable1.rhyme.coda.cluster
+    c2 = syllable2.onset.cluster
+    consonants: list[Token] =  c1 + c2
     if [x.token_type for x in consonants] == [TokenType.STOP, TokenType.RESONANT]:
         # Any combination of stop + resonant ("liquid") passes the test.
-        # The groups "γν", "γμ", "δν", "δμ" are always long in the best poets,
-        # but later versifiers sometimes take this license, so we let the
+        # The groups "γν", "γμ", "δν", "δμ" are always long in the earlier poets,
+        # but later poets sometimes take this license, so we let the
         # interpreter decide whether they're valid clusters for MCL.
         return True
     return False
 
+
 def ends_with_elision(word: Word) -> bool:
     """Indicate whether the given word ends with an elided vowel."""
     return word.syllables[-1].rhyme.nucleus.vowel.token_type == TokenType.ELISION
+
+
+@dataclass
+class LineCount:
+    """Structure for a line's syllable values."""
+    certain_long: int
+    certain_short: int
+    ambiguous: int
+    long_vowel_mutations: int
+    short_vowel_mutations: int
+    ambiguous_mutations: int
+    consonant_mutations: int
+    total: int
+
+
+def flatten_scansion(scansion_data: list[list[Scansion]]) -> list[Scansion]:
+    """Flatten a two-dimensional array of scansion values into a one-
+    dimensional array.
+    """
+    return [x for y in scansion_data for x in y if not x == Scansion.ELISION]
+
+
+def count_syllables(data: list[list[Scansion]]) -> LineCount:
+    """Determine the certainty of a given scansion."""
+    scansion = flatten_scansion(data)
+    longs = scansion.count(Scansion.LONG)
+    mut_long = scansion.count(Scansion.LONG_MUTABLE)
+    shorts = scansion.count(Scansion.SHORT)
+    mut_short = scansion.count(Scansion.SHORT_MUTABLE)
+    amb = scansion.count(Scansion.AMBIGUOUS)
+    mut_amb = scansion.count(Scansion.AMBIGUOUS_MUTABLE)
+    mcl = scansion.count(Scansion.MCL)
+    total = sum([longs, shorts, amb, mut_long, mut_short, mut_amb, mcl])
+    return LineCount(longs, shorts, amb, mut_long, mut_short, mut_amb, mcl, total)
+
+
+def make_patterns() -> dict[str, list[str]]:
+    """Make symbol patterns for all hexameter types."""
+    variations: dict[str, list[str]] = {}
+    for variation in HexameterStates:
+        form = ""
+        for char in variation:
+            if char == "d":
+                form += "+--"
+            if char == "s":
+                form += "++"
+        form += "+x"
+        variations[HexameterStates(variation).value] = list(form)
+    return variations
+
+
+def adherence(data: list[list[Scansion]]) -> dict[str, float]:
+    """Test (roughly) how closely the given scansion adheres to each hexameter
+    state.
+    """
+    # placeholder for more sophisticated func
+    report: dict[str, float] = {}
+    scansion = simplify_metrical_symbols(flatten_scansion(data))
+    n = len(scansion)
+    p = make_patterns()
+    patterns: dict[str, list[str]] = {}
+    for x, y in p.items():
+        if len(y) == n:
+            patterns[x] = y
+    for label, pattern in patterns.items():
+        count = 0
+        for i, value in enumerate(scansion):
+            if value == pattern[i]:
+                count += 1
+        report[label] = count / n
+    return report
+
+
+def normalize_text(text: str) -> str:
+    """Ensure that any variant characters are converted to the expected form.
+    """
+    # placeholder for more sophisticated func
+    text = text.replace("᾽", "’")
+    return text

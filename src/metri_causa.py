@@ -4,7 +4,7 @@ from src.interpreter import LengthInterpreter
 from src.parser import GreekSyllableParser
 from src.printer import SyllableTreePrinter
 from src.tokenizer import GreekTokenizer
-from src.utils import simplify_metrical_symbols
+from src.utils import normalize_text, simplify_metrical_symbols
 
 
 class SyllabificationPrinter:
@@ -21,6 +21,7 @@ class SyllabificationPrinter:
 class LengthTest:
     """Class that prints an ugly version of the scansion of a given passage."""
     def __init__(self, text: str) -> None:
+        text = normalize_text(text)
         tokens = GreekTokenizer().tokenize(text)
         interpreter = LengthInterpreter()
         lines = GreekSyllableParser().parse(tokens)
@@ -33,4 +34,7 @@ class LengthTest:
             df = pandas.DataFrame([symbols, words])
             # df.style.set_properties(**{"text-align": "left"})
             print(df)
-            print()
+            # line_assessment = count_syllables(cola)
+            # line_adherence = sorted([(x, y) for x, y in adherence(cola).items()])
+            # print(f"Certain longs: {line_assessment.certain_long}, certain short: {line_assessment.certain_short}, total syllables: {line_assessment.total}")
+            # print(f"Adherences: {line_adherence}")

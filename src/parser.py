@@ -1,7 +1,7 @@
 
 from typing import Optional
 
-# from loguru import logger
+from loguru import logger
 
 from src.bases import Parser, Token
 from src.nodes import (
@@ -76,7 +76,7 @@ class GreekSyllableParser(Parser):
             return Nucleus(self.previous)
         if self.match(TokenType.ELISION):
             return Nucleus(self.previous)
-        raise RuntimeError(f"Unknown nucleus: {self.peek}")
+        raise RuntimeError(f"Unknown nucleus: {self.peek}. Current: {self.current}")
 
 
     def __coda(self) -> Coda:

@@ -49,8 +49,6 @@ Spondaic lines
 A few poets who are identified for a taste in spondaic hexameters: Aratus, Eratosthenes, Moschus, Euphorion, Theocritus
 
 
-
-
 Nonnus of Panopolis
 +++++++++++++++++++
 

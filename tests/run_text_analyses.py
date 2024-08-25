@@ -12,5 +12,8 @@ def test_homer() -> None:
         LengthTest(text)
 
 
-
+def test_anomalies() -> None:
+    with open("tests/texts/anomalies.txt", encoding="utf8") as f:
+        text = f.read()
+        LengthTest(text)
 

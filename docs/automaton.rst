@@ -16,25 +16,26 @@ RANKER
     Ranker, Hope. (2012) "hexameter" (Finite state automaton for analyzing hexameter). https://github.com/epilanthanomai/hexameter/blob/master/hexameter.py
 SCHUMANN
     Schumann, Anne-Kathrin, Christoph Beierle, Norbert Blößner. (year). "Using finite-state machines to automatically scan Ancient Greek hexameter". Digital Scholarship in the Humanities 37(1), pp.242-253. https://github.com/anetschka/greek_scansion/tree/master
-WEST-2
+WEST
     West, M.L. (2018). "Unmetrical Verses in Homer," in *Language and Meter*. Leiden: Brill.
 
+Finite Automata
++++++++++++++++
+A finite-state machine/automaton is a mathematical model of computation. It is 
+an abstract machine that can be in exactly one of a finite number of states at 
+any given time. The automaton can change from one state to another in response
+to some inputs; the change from one state to another is called a transition.
 
-Considerations
-++++++++++++++
-
-
-FINITE STATE PRINCIPLE
-----------------------
+Hexameter End States
+++++++++++++++++++++
 Regardless of correption, synizesis, muta-cum-liquida, etc., all hexameters must
-be resolvable to 32 end-states, organized below by number of spondees
+be resolvable to 32 end-states.
 
-(D stands for the dactly +--, S stands for the spondee ++, X for the 6th foot +- or ++)
+(D stands for the dactly +--, S stands for the spondee ++, X for the 6th foot +- or ++)::
 
-::
-
-    0       1       2       3       4       5
-    DDDDDX  SDDDDX  SSDDDX  DDSSSX  SSSSDX  SSSSSX
+    0       1       2       3       4       5       | Spondees
+    ----------------------------------------------------------
+    DDDDDX  SDDDDX  SSDDDX  DDSSSX  SSSSDX  SSSSSX  
             DSDDDX  DSSDDX  SDDSSX  DSSSSX
             DDSDDX  DDSSDX  SSDDSX  SDSSSX
             DDDSDX  DDDSSX  SSSDDX  SSDSSX
@@ -44,40 +45,20 @@ be resolvable to 32 end-states, organized below by number of spondees
                     DSDSDX  SDSDSX
                     DDSDSX  SSDSDX
                     DSDDSX  SDSSDX
+    -----------------------------------------------------------
+    17      16      15      14      13      12      | Syllables
 
-
-ARBITRARY LENGTHENING
----------------------
-
-Words that do not adhere the necessary pattern are sometimes given 
-vowel quantities that cannot be justified etymologically. When vowels
-that are naturally short are lengthened, they are usually re-spelled to 
-reflect the change, but ambiguous vowels simply imply a long quantity.
-We will observe that arbitrary lengthenings tend to take place in 
-the princeps of the foot, but especially in the first foot and
-before a caesura::
-
-        ἀποδίωμαι becomes   αποδῑωμαι
-        κῠανόπεπλος         κῡανόπεπλος
-        γενόμενον           γεινόμενον
-        ὑπὲρ ἅλα            ὑπεὶρ ἅλα
-        ἐν ἀγορῆι           εἰν ἀγορῆι
-        διογενής            δῑογενής
-        Πολυδάμας           Πουλυδάμας
-        ἀνέρες, ὕδατι       ανέρες, υδατι (long alpha)
-        ὄρεα, ὄρεσι         οὔρεα, οὔρεσι
-        ὄνομα               οὔνομα
-        ἀθάνατος            αθάνατος (long alpha)
-        ἀνεμόεις            ἠνεμόεις
-        ζεφυρίη             ζɛ̄φυρίη (Od. 7. 119) (NB not ει)
-        κατα(λ)λοφάδια      κατα(λ)λοφάδῑα (Od. 10. 169)
-        ἐπίτονος            ɛ̄̓πίτονος (Od. 12. 243) (NB not ει)
-        συβόσια             συβόσῑα (Od. 14. 101)
+There are a number of historical factors that lead to lines deviating from 
+these expected patterns, some of which can be resolved in the automaton's rules, 
+and others of which must be treated on an ad hoc basic.
 
 
 MISSING CONSONANT
 -----------------
-In some cases, vowels were lengthened by a consonant that is now lost.
+(see WEST)
+In some cases, vowels were lengthened by a consonantal segment that is now lost.
+Usually this has to be inferred from metre and etymology, but in some cases the
+MSS and papyri preserve geminate consonants.
 
 Lost digamma::
 
@@ -98,6 +79,10 @@ Lost sigma::
                     Πηλιάδα σμελίην, τὴν πατρὶ φίλωι πόρε Χείρων
                     +--+    --+      +   +-    -+    --   ++
 
+    Il. 5.83        ἔλλαβε πορφύρεος θάνατος καὶ μοῖρα κραταιή
+                    +--    +--+      --+     +   +-    -++
+                    ἔσλαβε κτλ.
+
 Lost sigma and digamma together::
 
     Il. 3. 172      αἰδοῖός τέ μοί ἐσσι, φίλε ἑκυρέ, δεινός τε
@@ -111,8 +96,10 @@ Lost sigma and digamma together::
                     + -  -  - --+-      -+  --   +--      +-
                     (the alpha of μέγα is arbitrarily long in any case)
 
-However, this principle is also applied analogically in places where it is
-not eymologically appropriate::
+Thus, words originally beginning with sequnces of sm- sn- sl- sr-, wr- and dw-
+are sometimes found to make position with a preceding short vowel. From this
+basic situation, a an arbitrary rule seems to have allowed for the lengthening of a 
+short vowel before *any* resonant, and less often delta, in the princeps of the foot::
     
     Od. 1. 269      οἷσιν ἐνὶ μεγάροισι· σὲ δὲ φράζεσθαι ἄνωγα
                     +-    --  --+-       -  +  ++-       -+-
@@ -122,18 +109,49 @@ not eymologically appropriate::
                     +++      -  --   --     +--     +   -  -+-
                     (as if σμεγάλ᾽)
 
-Thus, the general rule is that a short vowel may arbitrarily be treated as
-long when followed by a resonant, and sometimes delta.
+However, it's important to remember that even words that *did* originally begin 
+with complex consonantal onsets do not always make position with a preceding 
+short vowel. 
+
+This lengthening must be considered something of a poetic license 
+that operated when no other options were practical. This license extended to 
+cases that bore no relationship to lost consonants, real or analogical. When 
+vowels that are naturally short are lengthened, they are usually re-spelled to 
+reflect the change, but ambiguous vowels simply imply a long quantity. In some
+MSS and papyri, consonants may be doubled to show quantity::
+
+        ἀποδίωμαι   becomes     αποδῑωμαι
+        κῠανόπεπλος             κῡανόπεπλος
+        γενόμενον               γεινόμενον
+        ὑπὲρ ἅλα                ὑπεὶρ ἅλα
+        ἐν ἀγορῆι               εἰν ἀγορῆι
+        διογενής                δῑογενής
+        Πολυδάμας               Πουλυδάμας
+        ἀνέρες, ὕδατι           ανέρες, υδατι (long alpha, long upsilon)
+        ὄρεα, ὄρεσι             οὔρεα, οὔρεσι
+        ὄνομα                   οὔνομα
+        ἀθάνατος                αθάνατος (long alpha)
+        ἀνεμόεις                ἠνεμόεις
+        ζεφυρίη                 ζɛ̄φυρίη (Od. 7. 119) (NB not ει)
+        κατα(λ)λοφάδια          κατα(λ)λοφάδῑα (Od. 10. 169)
+        ἐπίτονος                ɛ̄̓πίτονος (Od. 12. 243) (NB not ει)
+        συβόσια                 συβόσῑα (Od. 14. 101)
+
+In some of the later poets, this licence operates quite freely and in places
+where it makes very little sense::
+
+    
 
 
 ADAPTED FORMULA
 ---------------
+(see WEST)
 Some of these metrical abberations may be the result of fomulaic transposition, in 
 which a formula expecting a vowel/consonant is used in a new context with the wrong
 sequel, or in which a formula is displaced into a new sedes::
 
-    Od. 10.87       ἔνθ’ ἐπεὶ ἐς λιμένα κλυτόν 
-                    +    --   +  --+    --
+    Od. 10.87       ἔνθ’ ἐπεὶ ἐς λιμένα κλυτόν ἤλθομεν, ὃν πέρι πέτρη
+                    +    --   +  --+    --     +--      +  --   ++
     Od. 10.141      ναύλοχον ἐς λιμένα, καί τις θεὸς ἡγεμόνευεν
                     +--      +  ---     +   +   --   +--+-
     Il. 24.104      ἤλυθες Οὔλυμπόνδε θεὰ Θέτι κηδομένη περ
@@ -190,21 +208,20 @@ And in some cases, this applies to cases aside from the vocative::
 
 IRREGULAR STRUCTURE
 -------------------
-Some hexameters exhibit an irregular structure that cannot be resolved or
-explained in a satisfactory way. Perhaps some of these reflect remnants of 
+(see WEST)
+Some hexameters exhibit an irregular structure that cannot be resolved in 
+a satisfactory way. Perhaps some of these reflect remnants of 
 an early form of the hexameter in which syllable structures were looser,
 while others may be down to (in some cases very early) textual corruption.
 
 (D here stands for the hemiepes +--+--+)
 
-The form D - D +, as if the second hemistich was meant to follow a feminine caesura::
+The form D - D +, as if the second hemistich were meant to follow a feminine caesura::
 
     Λ 697       εἵλετο κρινάμενος τριηκόσι’ ἠδὲ νομῆας
                 +--    +--+       -+--      +-   -++    
 
-                    
-
-The form D - + D +, as if the second hemistich was meant to follow a masculing caesura::
+The form D - + D +, as if the second hemistich were meant to follow a masculing caesura::
 
     Il. 4.202   λαῶν, οἵ οἱ ἕποντο Τρίκης ἐξ ἱπποβότοιο
                 ++    +  -  -+-    ++    +  +--+-  
@@ -229,7 +246,8 @@ Something unmetrical::
                 +-      -   +-+--      ++--       +-   -+-
 
                     - ἀλλοειδέα (form and lemma) appear only here; possible solutions
-                    have been to take synizesis, or to assume digamma
+                    have been to read ἀλλοϊδέα with synizesis, or else take οει in synizesis
+                    as well, or else to assume digamma
                     - φαινέσκετο (form) appears only here.
 
     Il. 18.458  υἱεῖ ἐμῷ ὠκυμόρῳ δόμεν ἀσπίδα καὶ τρυφάλειαν
@@ -274,10 +292,9 @@ of a proto-form::
     Il. 12.208      Τρῶες δ’ ἐρρίγησαν ὅπως ἴδον αἰόλον ὄφιν (for ὄπφιν?)
                     ++       +++-      -+   --   +--    --
 
-
-
 MISSING VOWEL
 -------------
+(see WEST)
 Changes to the language have altered the syllabic structure of certain lines
 inherited from the oral tradition.
 
@@ -331,6 +348,7 @@ language, causing previously metrical verses to become unmetrical::
 
 TRANSFERRED QUANTITY
 --------------------
+(see WEST)
 One of the phonological changes that the Greek language underwent over time 
 involved the transfer of quantities in adjacent vowels, causing previously
 metrical verses to become unmetrical::
@@ -340,31 +358,22 @@ metrical verses to become unmetrical::
 
     In which ἕως has undergone a tranfer of quantity from earlier ἧος.
 
-    
-
-
-
-    
-
 WELL-FORMED VERSES
 ------------------
-
+(see WEST)
 There is a preference for a dactylic fifth foot, especially when the line
 ends with a disyllabic word, with the ending ++++ being very uncommon. When 
 it does occur, it is nearly always clear that the long biceps in the fifth 
 foot is the product of vowel contraction::
 
-    ἤ πού τίς σφιν ἔνισπε θεοπροπέων εὖ εἰδώς (Il. 6. 438, < *ἔϋ).
-    ἐγγύθεν ᾽Αρήνης, ὅθι μείναμεν ἠῶ δῖαν (Il. 11. 723, < *ἠόα).
-    ἦεν ἀνήνασθαι, χαλεπὴ δ᾽ ἔχε δήμου φῆμις (Od. 14. 239, < *δήμοο).
-    οἴνωι Πραμνείωι, ἐπὶ δ᾽ αἴγειον κνῆ τυρόν (Il. 11. 639, < *κνάε?).
-    ἀμφὶ δ᾽ ἄρ᾽ αἰγείρων ὑδατοτρεφέων ἦν ἄλσος (Od. 17. 208, < *ἔεν?).
+    Il. 6. 438      ἤ πού τίς σφιν ἔνισπε θεοπροπέων εὖ εἰδώς   (< *ἔϋ).
+    Il. 11. 723     ἐγγύθεν ᾽Αρήνης, ὅθι μείναμεν ἠῶ δῖαν       (< *ἠόα).
+    Od. 14. 239     ἦεν ἀνήνασθαι, χαλεπὴ δ᾽ ἔχε δήμου φῆμις    (< *δήμοο).
+    Il. 11. 639     οἴνωι Πραμνείωι, ἐπὶ δ᾽ αἴγειον κνῆ τυρόν   (< *κνάε?).
+    Od. 17. 208     ἀμφὶ δ᾽ ἄρ᾽ αἰγείρων ὑδατοτρεφέων ἦν ἄλσος  (< *ἔεν?).
 
 But contraction also justifies monosyllables of other types, and we find::
 
-    πυροί τε ζειαί τε ἰδ᾽ εὐρυφυὲς κρῖ λευκόν (Od. 4. 604).
-    ἀλλά τε καὶ τῶν αἰὲν ἀφαιρεῖται λὶς πέτρη (Od. 12. 64).
-    HDem.204    μειδῆσαι γελάσαι τε καὶ ἵλαον σχεῖν θυμόν
-
-
-"""
+    Od. 4. 604      πυροί τε ζειαί τε ἰδ᾽ εὐρυφυὲς κρῖ λευκόν
+    Od. 12. 64      ἀλλά τε καὶ τῶν αἰὲν ἀφαιρεῖται λὶς πέτρη
+    HDem.204        μειδῆσαι γελάσαι τε καὶ ἵλαον σχεῖν θυμόν

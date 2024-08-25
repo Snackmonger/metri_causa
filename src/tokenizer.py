@@ -6,8 +6,7 @@ from src.bases import Tokenizer, Token
 from src.constants import ELISION
 from src.token_types import TokenType
 from src.utils import (
-    can_start_digraph,
-    can_finish_digraph,
+    can_form_diphthong,
     is_stop,
     is_double,
     is_resonant,
@@ -39,7 +38,7 @@ class GreekTokenizer(Tokenizer):
         self.tokens.append(token)
         if token_type == TokenType.UNKNOWN_LEXEME:
             self.__errors.append(
-                f"Unknown: {lexeme}, ln.{self.line}.{self.line_chars}")
+                f"Unknown lexeme: {lexeme} @ {self.line}.{self.line_chars}")
 
     @property
     def errors(self) -> list[str]:
@@ -172,10 +171,10 @@ class GreekTokenizer(Tokenizer):
 
     def __check_digraph(self) -> bool:
         char = self.previous
-        if can_start_digraph(char):
-            if can_finish_digraph(self.peek):
-                self.advance()
-                return True
+        next_ = self.peek
+        if can_form_diphthong(char, next_):
+            self.advance()
+            return True
         return False
 
     def __stop(self) -> None:
